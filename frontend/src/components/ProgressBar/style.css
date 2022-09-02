@@ -1,0 +1,32 @@
+.bar{
+  display: flex;
+	align-items: center;
+}
+
+.percentage{
+  margin: 0 0.5em;
+  font-size: small;
+}
+
+.progress {
+	background-color: #d8d8d8;
+	border-radius: 20px;
+	position: relative;
+	margin: 5px 5px 5px 0;
+	height: 7px;
+	width: 10rem;
+}
+
+.progress-done {
+	background: linear-gradient(to left, #ff6f00, #ffa557);
+	box-shadow: 0 3px 3px -5px #f2c270, 0 2px 5px #f4a14e;
+	border-radius: 20px;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	width: 0;
+	opacity: 0;
+	transition: 1s ease 0.3s;
+}

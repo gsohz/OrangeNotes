@@ -1,0 +1,35 @@
+.Button_Primario {
+  height: 2.5rem;
+  width: auto;
+  background: #fd7e14;
+  border-radius: 5px;
+  color: #fafafa;
+  border: none;
+  font-size: 15px;
+  padding: 0 1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Button_Seundario {
+  height: 2.5rem;
+  width: auto;
+  background: #383a3c;
+  border-radius: 5px;
+  color: #fafafa;
+  border: none;
+  font-size: 15px;
+  padding: 0 1em;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+button > svg{
+  margin: 0 0.2em;
+}
+
