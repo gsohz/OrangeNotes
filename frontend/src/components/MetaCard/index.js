@@ -8,11 +8,18 @@ import { useEffect, useState } from "react";
 import PopUp from "../PopUp";
 
 function MetaCard({ goal, edit }) {
-  const options = { year: "numeric", month: "numeric", day: "numeric" };
+  const options = {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
   const navigate = useNavigate();
 
   const [show, setShow] = useState(true);
   const [modalShow, setModalShow] = useState(false);
+  const [deleteObj, setDeleteObj] = useState(false);
+  const [updateObj, setUpdateObj] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -22,6 +29,8 @@ function MetaCard({ goal, edit }) {
   }, [open, navigate, goal.id]);
 
   useEffect(() => {
+    setDeleteObj(false);
+    setUpdateObj(false);
     if (edit) setShow(!edit.edit);
   }, [edit]);
 
@@ -49,13 +58,24 @@ function MetaCard({ goal, edit }) {
             zIndex: "9",
           }}
           hidden={show}
-          onClick={() => setModalShow(true)}
+          onClick={() => {
+            setDeleteObj(true);
+            setModalShow(true);
+          }}
         />
         <PopUp
           show={modalShow}
-          type={"del"}
+          type={deleteObj ? "del" : updateObj ? "updt" : ""}
           goal={goal}
           onHide={() => setModalShow(false)}
+          button_cancel={
+            <Button
+              style={{ border: "none", backgroundColor: "grey" }}
+              onClick={() => setModalShow(false)}
+            >
+              Cancelar
+            </Button>
+          }
         />
         <Button
           icon={MdModeEdit()}
@@ -70,7 +90,12 @@ function MetaCard({ goal, edit }) {
             backgroundColor: "#5072A7",
           }}
           hidden={show}
+          onClick={() => {
+            setUpdateObj(true);
+            setModalShow(true);
+          }}
         />
+
         <Card.Body onClick={() => setOpen(true)}>
           <Card.Title>{goal.title}</Card.Title>
           <Card.Subtitle className="mb-1 text-muted">
@@ -78,7 +103,9 @@ function MetaCard({ goal, edit }) {
           </Card.Subtitle>
           <Card.Text>{goal.description}</Card.Text>
           <Card.Subtitle className="text-muted" style={{ fontSize: "12px" }}>
-            Acaba em: {goal.prediction.toLocaleString(undefined, options)}
+            {goal.prediction !== ""
+              ? `Acaba em: ${goal.prediction.toLocaleString([], options)}`
+              : ""}
           </Card.Subtitle>
         </Card.Body>
       </Card>

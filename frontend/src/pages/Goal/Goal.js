@@ -27,12 +27,8 @@ function Goal() {
   async function formatResponse(response) {
     return {
       id: response._id,
-      createdAt: response?.createdAt
-        ? new Date(response?.createdAt)
-        : new Date(),
-      prediction: response?.prediction
-        ? new Date(response?.prediction)
-        : new Date(),
+      createdAt: response?.createdAt ? new Date(response?.createdAt) : "",
+      prediction: response?.prediction ? new Date(response?.prediction) : "",
       title: response?.title,
       description: response?.description,
       percentage: response?.percentage,
@@ -41,6 +37,7 @@ function Goal() {
   }
 
   const openedGoal = useCallback(async () => {
+    setGoals([]);
     const response = await OpenGoal(id);
     const resMainGoal = await formatResponse(response.goal);
     setMainGoal(resMainGoal);
@@ -100,7 +97,20 @@ function Goal() {
             </h3>
             <Button onClick={() => setModalShow(true)}>{BsPlusLg()}</Button>
 
-            <PopUp show={modalShow} onHide={() => setModalShow(false)} />
+            <PopUp
+              type={"choose"}
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+              user={datasUser}
+              button_cancel={
+                <Button
+                  style={{ border: "none", backgroundColor: "grey" }}
+                  onClick={() => setModalShow(false)}
+                >
+                  Cancelar
+                </Button>
+              }
+            />
           </div>
 
           <div className="division">
@@ -109,7 +119,9 @@ function Goal() {
               secundario={true}
               style={{ marginLeft: "auto", marginRight: "2px" }}
               icon={MdModeEdit()}
-              onClick={() => setEdit(!edit)}
+              onClick={() => {
+                setEdit(!edit);
+              }}
             />
           </div>
         </div>
@@ -127,7 +139,12 @@ function Goal() {
                 ></MetaCard>
               ))}
               {objectives.map((objectives) => (
-                <ObjCard key={objectives.id} objective={objectives}></ObjCard>
+                <ObjCard
+                  key={objectives.id}
+                  objective={objectives}
+                  user={datasUser}
+                  edit={{ edit }}
+                ></ObjCard>
               ))}
             </div>
           )}
@@ -135,9 +152,7 @@ function Goal() {
       </div>
     </div>
   ) : (
-    <div>
-      <h1>Você precisa estar logado para acessar</h1>
-    </div>
+    <div></div>
   );
 }
 

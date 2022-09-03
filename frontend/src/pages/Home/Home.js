@@ -19,8 +19,8 @@ function Home() {
   function formatGoal(goal) {
     return {
       id: goal._id,
-      createdAt: goal?.createdAt ? new Date(goal?.createdAt) : new Date(),
-      prediction: goal?.prediction ? new Date(goal?.prediction) : new Date(),
+      createdAt: goal?.createdAt ? new Date(goal?.createdAt) : "",
+      prediction: goal?.prediction ? new Date(goal?.prediction) : "",
       title: goal?.title,
       description: goal?.description,
       percentage: goal?.percentage,
@@ -37,7 +37,6 @@ function Home() {
   useEffect(() => {
     const user = JSON.parse(sessionStorage.getItem("@ogNotes")) || {};
 
-    console.log(user.email);
     if (user.token) {
       setDatasUser(user);
       listGoals();
@@ -58,11 +57,18 @@ function Home() {
             <Button onClick={() => setModalShow(true)}>Adicionar Meta </Button>
 
             <PopUp
-              title={"Meta"}
               show={modalShow}
               onHide={() => setModalShow(false)}
               user={datasUser}
               type={"main"}
+              button_cancel={
+                <Button
+                  style={{ border: "none", backgroundColor: "grey" }}
+                  onClick={() => setModalShow(false)}
+                >
+                  Cancelar
+                </Button>
+              }
             />
           </div>
 

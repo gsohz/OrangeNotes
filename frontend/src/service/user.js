@@ -4,7 +4,6 @@ export default function Auth() {
   const user = JSON.parse(sessionStorage.getItem("@ogNotes")) || {};
 
   if (user && user.token) {
-    console.log(user.id);
     return { Authorization: `Bearer ${user?.token}`, user: user.id };
   } else {
     return {};
