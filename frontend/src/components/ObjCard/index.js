@@ -7,38 +7,40 @@ import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import Button from "../Button/index";
 import PopUp from "../PopUp";
 
-function ObjCard({ objective, user, edit }) {
+function ObjCard({ objective, edit }) {
   const options = {
     timeZone: "UTC",
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
   };
-  const [datasUser, setDatasUser] = useState({});
   const [error, setError] = useState("");
   const [show, setShow] = useState(true);
   const [deleteObj, setDeleteObj] = useState(false);
   const [updateObj, setUpdateObj] = useState(false);
   const [modalShow, setModalShow] = useState(false);
 
-  const completeGoal = useCallback(
-    async (objective) => {
-      const { id } = objective;
-      const user = datasUser.id;
-      const completed = !objective.completed;
+  const completeGoal = useCallback(async (objective) => {
+    const { id } = objective;
+    const completed = !objective.completed;
+    const { title, description, prediction } = objective;
 
-      try {
-        const response = await UpdateObjective(id, completed, user);
+    try {
+      const response = await UpdateObjective(
+        id,
+        title,
+        description,
+        prediction,
+        completed
+      );
 
-        if (response.status === 200) {
-          window.location.reload();
-        }
-      } catch (err) {
-        setError(err?.response?.data?.message || `Ocorreu um erro`);
+      if (response.status === 200) {
+        window.location.reload();
       }
-    },
-    [datasUser.id]
-  );
+    } catch (err) {
+      setError(err?.response?.data?.message || `Ocorreu um erro`);
+    }
+  }, []);
 
   useEffect(() => {
     if (edit) setShow(!edit.edit);
@@ -47,8 +49,7 @@ function ObjCard({ objective, user, edit }) {
   useEffect(() => {
     setDeleteObj(false);
     setUpdateObj(false);
-    setDatasUser(user);
-  }, [user]);
+  }, []);
 
   return (
     <>
@@ -58,7 +59,7 @@ function ObjCard({ objective, user, edit }) {
           height: "fit-content",
           borderRadius: "20px",
           boxShadow: "0px 2px 4px 2px rgba(0, 0, 0, 0.25)",
-          cursor: "pointer",
+
           backgroundColor: objective.completed ? "lightgrey" : "",
           color: objective.completed ? "grey" : "",
         }}
@@ -113,8 +114,13 @@ function ObjCard({ objective, user, edit }) {
             setModalShow(true);
           }}
         />
-        <Card.Body onClick={() => completeGoal(objective)}>
-          <Card.Title>{objective.title}</Card.Title>
+        <Card.Body>
+          <Card.Title
+            style={{ cursor: "pointer" }}
+            onClick={() => completeGoal(objective)}
+          >
+            {objective.title}
+          </Card.Title>
           {objective.completed ? (
             <BsCheckLg
               style={{

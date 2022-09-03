@@ -172,7 +172,6 @@ function PopUp(props) {
         centered
         backdrop="static"
       >
-        {console.log(props.objective)}
         {error && <Alert variant="danger">{error}</Alert>}
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">

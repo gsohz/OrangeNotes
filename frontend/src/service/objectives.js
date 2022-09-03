@@ -22,14 +22,14 @@ export async function UpdateObjective(
   prediction,
   completed
 ) {
-  const resquest = {
+  const request = {
     title,
     description,
     prediction,
     completed,
   };
 
-  let response = await api.put(`${id}/objective`, resquest, {
+  let response = await api.put(`${id}/objective`, request, {
     headers: Auth(),
   });
 
@@ -37,6 +37,7 @@ export async function UpdateObjective(
 }
 
 export async function DeleteObjective(id) {
+
   const response = await api.delete(`/${id}/objective`, { headers: Auth() });
 
   return response ? response : {};

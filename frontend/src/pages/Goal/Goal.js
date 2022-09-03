@@ -38,6 +38,7 @@ function Goal() {
 
   const openedGoal = useCallback(async () => {
     setGoals([]);
+    setObjectives([]);
     const response = await OpenGoal(id);
     const resMainGoal = await formatResponse(response.goal);
     setMainGoal(resMainGoal);
@@ -55,7 +56,7 @@ function Goal() {
         .catch((err) => console.log(err));
     }
 
-    if (response.objectives) {
+    if (response.objectives.length > 0) {
       OpenGoal(id)
         .then((response) => {
           var result = response.objectives.map((objectives) => {
@@ -142,7 +143,6 @@ function Goal() {
                 <ObjCard
                   key={objectives.id}
                   objective={objectives}
-                  user={datasUser}
                   edit={{ edit }}
                 ></ObjCard>
               ))}
