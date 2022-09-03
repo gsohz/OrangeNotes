@@ -92,7 +92,7 @@ async function percentage(fatherId) {
     }
   }
 
-  return total === 0 ? Math.round(total) : total;
+  return total === 0 ? Math.round(total) : 0;
 }
 
 async function deleteAllWithFamily(fatherId) {

@@ -26,7 +26,9 @@ const listGoal = async (req, res) => {
 };
 
 const addGoal = async (req, res) => {
-  const { title, description, prediction, user } = req.body;
+  const { user } = req.headers;
+  const { id } = req.params;
+  const { title, description, prediction } = req.body;
 
   const goalFather = await Goal.findById(req.params.id);
 
@@ -96,7 +98,8 @@ const openGoal = async (req, res) => {
 };
 
 const updateGoal = async (req, res) => {
-  const { title, description, user, prediction, completed } = req.body;
+  const { user } = req.headers;
+  const { title, description, prediction, completed } = req.body;
   const goal = await Goal.findById(req.params.id);
 
   if (!goal) {
@@ -135,7 +138,7 @@ const updateGoal = async (req, res) => {
 };
 
 const deleteGoal = async (req, res) => {
-  const { user } = req.body;
+  const { user } = req.headers;
   const goal = await Goal.findById(req.params.id);
 
   if (!goal) {
@@ -146,9 +149,16 @@ const deleteGoal = async (req, res) => {
         res.status(401).send("Não foi possível realizar esta ação");
       } else {
         if (goal) {
-          await deleteAllWithFamily(goal._id);
+          const id = goal.id;
 
-          await Goal.deleteOne({ _id: goal._id });
+          const hasFamily = await Goal.find({ goalFather: id });
+          if (hasFamily != "") {
+            await deleteAllWithFamily(id).catch((err) => {
+              res.status(500);
+            });
+          }
+
+          await Goal.deleteOne({ _id: id });
 
           if (goal.goalFather) {
             const goalToUpdt = await Goal.findById(goal.goalFather);

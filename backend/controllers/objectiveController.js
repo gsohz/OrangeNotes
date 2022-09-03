@@ -5,6 +5,7 @@ const { percentage } = require("../utils/aggregation");
 //trocar o req.body._id por req.user._id
 
 const addObjective = async (req, res) => {
+  const { user } = req.headers;
   const { title, description, prediction } = req.body;
   const goalFather = req.params.id;
 
@@ -16,10 +17,10 @@ const addObjective = async (req, res) => {
         title: title,
         description: description,
         prediction: prediction,
-        user: req.body._id,
+        user: user,
         goalFather: goalFather,
       }).catch((err) => {
-        res.status(500).json("Ocorreu um erro ao criar objetivo");
+        res.status(500);
       });
 
       const createdObjective = await objective.save();
@@ -39,6 +40,7 @@ const addObjective = async (req, res) => {
 };
 
 const updateObjective = async (req, res) => {
+  const { user } = req.headers;
   const { title, description, prediction, completed } = req.body;
   const objective = await Objective.findById(req.params.id);
 
@@ -46,7 +48,7 @@ const updateObjective = async (req, res) => {
     res.status(401).send("Objetivo não encontrado");
   } else {
     try {
-      if (objective.user.toString() !== req.body._id.toString()) {
+      if (objective.user.toString() !== user.toString()) {
         res.status(401).json("Não foi possível realizar esta ação");
       } else {
         if (objective) {
@@ -77,13 +79,14 @@ const updateObjective = async (req, res) => {
 };
 
 const deleteObjective = async (req, res) => {
+  const { user } = req.headers;
   const objective = await Objective.findById(req.params.id);
 
   if (!objective) {
     res.status(401).json("Objetivo não encontrado");
   } else {
     try {
-      if (objective.user.toString() != req.body._id.toString()) {
+      if (objective.user.toString() != user.toString()) {
         res.status(401).json("Não foi possível realizar esta ação");
       } else {
         if (objective) {
