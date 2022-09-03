@@ -160,13 +160,17 @@ const deleteGoal = async (req, res) => {
 
           await Goal.deleteOne({ _id: id });
 
-          if (goal.goalFather) {
-            const goalToUpdt = await Goal.findById(goal.goalFather);
-            const pct = await percentage(goalToUpdt._id);
+          try {
+            if (goal.goalFather) {
+              const goalToUpdt = await Goal.findById(goal.goalFather);
+              const pct = await percentage(goalToUpdt._id);
 
-            await goalToUpdt.updateOne({
-              percentage: pct,
-            });
+              await goalToUpdt.updateOne({
+                percentage: pct,
+              });
+            }
+          } catch (err) {
+            res.status(500);
           }
 
           res.status(200).json("Meta deletada");

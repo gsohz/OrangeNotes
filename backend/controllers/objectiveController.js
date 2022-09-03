@@ -92,12 +92,16 @@ const deleteObjective = async (req, res) => {
         if (objective) {
           await Objective.deleteOne({ _id: req.params.id });
 
-          const goalToUpdt = await Goal.findById(objective.goalFather);
-          const pct = await percentage(goalToUpdt._id);
+          try {
+            const goalToUpdt = await Goal.findById(objective.goalFather);
+            const pct = await percentage(goalToUpdt._id);
 
-          await goalToUpdt.updateOne({
-            percentage: pct,
-          });
+            await goalToUpdt.updateOne({
+              percentage: pct,
+            });
+          } catch (err) {
+            res.status(500);
+          }
 
           res.status(200).json("Objetivo deletado");
         }
