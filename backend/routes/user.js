@@ -6,6 +6,7 @@ const {
   openGoal,
   deleteGoal,
   updateGoal,
+  listGoalCompleted,
 } = require("../controllers/goalsController");
 const {
   addObjective,
@@ -28,6 +29,8 @@ router
   .post(requireLogin, addGoal)
   .put(requireLogin, updateGoal)
   .delete(requireLogin, deleteGoal);
+
+router.route("/completeds").get(requireLogin, listGoalCompleted);
 
 router
   .route("/:id/objective")

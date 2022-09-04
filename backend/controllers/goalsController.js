@@ -1,6 +1,10 @@
 const Goal = require("../models/GoalSchema");
 const Objective = require("../models/ObjectiveSchema");
-const { percentage, deleteAllWithFamily } = require("../utils/aggregation");
+const {
+  percentage,
+  deleteAllWithFamily,
+  countObjectivesCompleted,
+} = require("../utils/aggregation");
 
 String.prototype.toObjectId = function () {
   var ObjectId = require("mongoose").Types.ObjectId;
@@ -25,9 +29,30 @@ const listGoal = async (req, res) => {
   }
 };
 
+const listGoalCompleted = async (req, res) => {
+  const { user } = req.headers;
+
+  try {
+    if (user) {
+      const goals = await Goal.find({
+        completed: { $eq: true },
+        user: user.toObjectId(),
+      });
+      goals.sort((a, b) => {
+        return new Date(b.prediction) - Date(a.prediction);
+      });
+
+      const completeds = await countObjectivesCompleted(user);
+
+      res.status(200).json({ goals, completeds });
+    }
+  } catch (err) {
+    res.status(500);
+  }
+};
+
 const addGoal = async (req, res) => {
   const { user } = req.headers;
-  const { id } = req.params;
   const { title, description, prediction } = req.body;
 
   const goalFather = await Goal.findById(req.params.id);
@@ -151,11 +176,17 @@ const deleteGoal = async (req, res) => {
         if (goal) {
           const id = goal.id;
 
-          const hasFamily = await Goal.find({ goalFather: id });
-          if (hasFamily != "") {
-            await deleteAllWithFamily(id).catch((err) => {
-              res.status(500);
-            });
+          try {
+            const hasFamilyGoal = await Goal.find({ goalFather: id });
+            const hasFamilyObj = await Objective.find({ goalFather: id });
+
+            if (hasFamilyGoal != "" || hasFamilyObj != "") {
+              await deleteAllWithFamily(id).catch((err) => {
+                res.status(500);
+              });
+            }
+          } catch (err) {
+            res.status(500);
           }
 
           await Goal.deleteOne({ _id: id });
@@ -182,4 +213,11 @@ const deleteGoal = async (req, res) => {
   }
 };
 
-module.exports = { listGoal, addGoal, openGoal, deleteGoal, updateGoal };
+module.exports = {
+  listGoal,
+  addGoal,
+  openGoal,
+  deleteGoal,
+  updateGoal,
+  listGoalCompleted,
+};
