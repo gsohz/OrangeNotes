@@ -28,11 +28,11 @@ function Home() {
   }
 
   const listGoals = useCallback(() => {
-    ListUserGoals(datasUser.email)
+    ListUserGoals()
       .then((response) => response.map((goals) => formatGoal(goals)))
       .then((goalsFormated) => setGoals(goalsFormated))
       .catch((err) => console.log(err));
-  }, [datasUser.email]);
+  }, []);
 
   useEffect(() => {
     const user = JSON.parse(sessionStorage.getItem("@ogNotes")) || {};
@@ -50,10 +50,23 @@ function Home() {
     <div>
       <Navbar user={datasUser} />
       <div className="container-page">
-        <h1>OrangeNotes</h1>
+        <div className="info">
+          <h1>OrangeNotes</h1>
+          <p>
+            {goals.length !== 0
+              ? "Continue com o ótimo trabalho!"
+              : "Bem vindo ao OrangeNotes, esse é um site para ajudar na sua organização. Ele funciona com um sistema de metas e objetivos. Defina sua meta principal e explore suas opções clicando nela para abri-lá."}
+          </p>
+        </div>
         <div className="menu-metas">
           <div className="division-box">
             <h2>Suas metas</h2>
+            <Button
+              secundario={true}
+              style={{ marginLeft: "auto", marginRight: "0.5em" }}
+              icon={MdModeEdit()}
+              onClick={() => setEdit(!edit)}
+            />
             <Button onClick={() => setModalShow(true)}>Adicionar Meta </Button>
 
             <PopUp
@@ -74,12 +87,6 @@ function Home() {
 
           <div className="division">
             <hr style={{ margin: "0.5em" }} />
-            <Button
-              secundario={true}
-              style={{ marginLeft: "auto", marginRight: "2px" }}
-              icon={MdModeEdit()}
-              onClick={() => setEdit(!edit)}
-            />
           </div>
         </div>
         <div className="content">

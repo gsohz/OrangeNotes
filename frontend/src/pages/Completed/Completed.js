@@ -3,24 +3,18 @@ import MetaCard from "../../components/MetaCard";
 import Navbar from "../../components/Navbar";
 import PopUp from "../../components/PopUp/index";
 import Button from "../../components/Button";
-import ObjCard from "../../components/ObjCard";
 import "./style.css";
-import { useNavigate, useParams } from "react-router-dom";
-import { OpenGoal } from "../../service/goals";
-import { BsPlusLg } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { ListCompletedGoals } from "../../service/goals";
 import { MdModeEdit } from "react-icons/md";
 
-function Goal() {
+function Completed() {
   const [modalShow, setModalShow] = useState(false);
 
   const [datasUser, setDatasUser] = useState({});
-  const [mainGoal, setMainGoal] = useState();
+  const [completed, setCompleted] = useState({});
   const [goals, setGoals] = useState([]);
-  const [objectives, setObjectives] = useState([]);
   const [edit, setEdit] = useState(false);
-
-  const options = { year: "numeric", month: "numeric", day: "numeric" };
-  const { id } = useParams();
 
   const navigate = useNavigate();
 
@@ -36,15 +30,11 @@ function Goal() {
     };
   }
 
-  const openedGoal = useCallback(async () => {
-    setGoals([]);
-    setObjectives([]);
-    const response = await OpenGoal(id);
-    const resMainGoal = await formatResponse(response.goal);
-    setMainGoal(resMainGoal);
+  const listCompletedGoals = useCallback(async () => {
+    const response = await ListCompletedGoals();
 
     if (response.goals.length > 0) {
-      OpenGoal(id)
+      ListCompletedGoals()
         .then((response) => {
           var result = response.goals.map((goals) => {
             return formatResponse(goals);
@@ -56,55 +46,54 @@ function Goal() {
         .catch((err) => console.log(err));
     }
 
-    if (response.objectives.length > 0) {
-      OpenGoal(id)
-        .then((response) => {
-          var result = response.objectives.map((objectives) => {
-            return formatResponse(objectives);
-          });
-
-          return Promise.all(result);
-        })
-        .then((result) => setObjectives(result))
+    if (response.completeds) {
+      ListCompletedGoals()
+        .then((response) => setCompleted(response.completeds))
         .catch((err) => console.log(err));
     }
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     const user = JSON.parse(sessionStorage.getItem("@ogNotes")) || {};
 
     if (user?.token) {
       setDatasUser(user);
-      openedGoal();
+      listCompletedGoals();
       return;
     }
 
-    navigate("/");
-  }, [navigate, openedGoal]);
+    navigate("/login");
+  }, [navigate, listCompletedGoals]);
 
   return datasUser?.token ? (
     <div>
       <Navbar user={datasUser} />
       <div className="container-page">
         <div className="info">
-          <h1 key={mainGoal?.id}>{mainGoal?.title}</h1>
-          <p className="textDesc">{mainGoal?.description}</p>
-          <span>{mainGoal?.prediction.toLocaleString(undefined, options)}</span>
+          <h1>
+            {completed?.resultMainGoal
+              ? `Parabéns, você concluiu ${completed.resultMainGoal} meta principal`
+              : "Aqui ficarão registradas suas metas que forem completadas"}
+          </h1>
+          <p>
+            {completed?.resultGoal && completed?.resultObj
+              ? `Para atingir este marco você concluiu ${completed.resultObj} objetivos e ${completed.resultGoal} metas secundárias!`
+              : completed?.resultObj
+              ? `Para atingir este marco você concluiu ${completed.resultObj} objetivos!`
+              : "Mantenha o foco para atingir seus objetivos!"}
+          </p>
         </div>
         <div className="menu-metas">
           <div className="division-box">
-            <h3 style={{ marginBottom: "0" }}>
-              Seus objetivos para {mainGoal?.title}
-            </h3>
+            <h3 style={{ marginBottom: "0" }}>Metas que foram completadas</h3>
             <Button
               secundario={true}
-              style={{ marginLeft: "auto", marginRight: "0.5em" }}
+              style={{ marginLeft: "auto", marginRight: "2px" }}
               icon={MdModeEdit()}
               onClick={() => {
                 setEdit(!edit);
               }}
             />
-            <Button onClick={() => setModalShow(true)}>{BsPlusLg()}</Button>
 
             <PopUp
               type={"choose"}
@@ -128,7 +117,7 @@ function Goal() {
         </div>
 
         <div className="content">
-          {goals?.length === 0 && objectives?.length === 0 ? (
+          {goals?.length === 0 ? (
             <div className="metas"></div>
           ) : (
             <div className="metas">
@@ -138,13 +127,6 @@ function Goal() {
                   goal={goals}
                   edit={{ edit }}
                 ></MetaCard>
-              ))}
-              {objectives.map((objectives) => (
-                <ObjCard
-                  key={objectives.id}
-                  objective={objectives}
-                  edit={{ edit }}
-                ></ObjCard>
               ))}
             </div>
           )}
@@ -156,4 +138,4 @@ function Goal() {
   );
 }
 
-export default Goal;
+export default Completed;

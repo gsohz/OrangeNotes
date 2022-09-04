@@ -46,3 +46,9 @@ export async function UpdateGoal(id, title, description, prediction) {
 
   return response ? response : {};
 }
+
+export async function ListCompletedGoals() {
+  const response = await api.get("/completeds", { headers: Auth() });
+
+  return response?.data ? response.data : {};
+}

@@ -40,10 +40,14 @@ function MetaCard({ goal, edit }) {
         style={{
           width: "18rem",
           height: "fit-content",
+          maxHeight: "10rem",
           borderRadius: "20px",
-          boxShadow: "0px 2px 4px 2px rgba(0, 0, 0, 0.25)",
           cursor: "pointer",
+          background: Math.round(goal.percentage === 100)
+            ? "linear-gradient(120deg, rgba(225,225,225,0.5) 0%, rgba(255,164,44,0.9) 100%)"
+            : "",
         }}
+        className="card"
       >
         <Button
           icon={MdDeleteForever()}
@@ -96,13 +100,24 @@ function MetaCard({ goal, edit }) {
           }}
         />
 
-        <Card.Body onClick={() => setOpen(true)}>
-          <Card.Title>{goal.title}</Card.Title>
+        <Card.Body
+          onClick={() => setOpen(true)}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+            textOverflow: "ellipses",
+          }}
+        >
+          <Card.Title className="card-title">{goal.title}</Card.Title>
           <Card.Subtitle className="mb-1 text-muted">
             <ProgressBar done={Math.round(goal.percentage)} />
           </Card.Subtitle>
-          <Card.Text>{goal.description}</Card.Text>
-          <Card.Subtitle className="text-muted" style={{ fontSize: "12px" }}>
+          <Card.Text className="desc">{goal.description}</Card.Text>
+          <Card.Subtitle
+            className="text-muted"
+            style={{ fontSize: "12px", marginTop: "auto" }}
+          >
             {goal.prediction !== ""
               ? `Acaba em: ${goal.prediction.toLocaleString([], options)}`
               : ""}

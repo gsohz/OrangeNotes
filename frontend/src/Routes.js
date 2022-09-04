@@ -9,6 +9,7 @@ import {
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
 import Goal from "./pages/Goal/Goal";
+import Completed from "./pages/Completed/Completed";
 
 //#endregion
 
@@ -20,6 +21,7 @@ function Routes() {
         <Route path=":id/goal" element={<Goal />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Login />} />
+        <Route path="/completeds" element={<Completed />} />
       </Switch>
     </Router>
   );

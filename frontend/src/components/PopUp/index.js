@@ -178,7 +178,7 @@ function PopUp(props) {
             {updateObj === true
               ? "Atualizado com sucesso"
               : props.type === "main"
-              ? `Adicionar meta princiapal`
+              ? `Adicionar meta principal`
               : props.goal
               ? `Atualizar a meta ${props.goal?.title}`
               : `Atualizar o objetivo ${props.objective?.title}`}
@@ -371,7 +371,8 @@ function PopUp(props) {
           <p className="text-muted" style={{ margin: 0 }}>
             Os objetivos são o que compõem uma meta, eles precisam ser cumpridos
             para que uma meta seja atingida. Adicione um objetivo para ter em
-            mente o que precisa ser feito para atingir sua meta.
+            mente o que precisa ser feito para atingir sua meta. Para concluir
+            ele basta clicar em seu título.
           </p>
           <Button
             style={{ margin: "1em auto" }}

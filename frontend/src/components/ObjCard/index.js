@@ -59,10 +59,12 @@ function ObjCard({ objective, edit }) {
           height: "fit-content",
           borderRadius: "20px",
           boxShadow: "0px 2px 4px 2px rgba(0, 0, 0, 0.25)",
-
-          backgroundColor: objective.completed ? "lightgrey" : "",
-          color: objective.completed ? "grey" : "",
+          background: objective.completed
+            ? "linear-gradient(120deg, rgba(225,225,225,0.5) 0%, rgba(255,164,44,0.9) 100%)"
+            : "",
+          color: objective.completed ? "white" : "",
         }}
+        className="card"
       >
         <Button
           icon={MdDeleteForever()}
@@ -116,7 +118,7 @@ function ObjCard({ objective, edit }) {
         />
         <Card.Body>
           <Card.Title
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer", paddingBottom: "0.4em" }}
             onClick={() => completeGoal(objective)}
           >
             {objective.title}
@@ -136,7 +138,7 @@ function ObjCard({ objective, edit }) {
           ) : (
             ""
           )}
-          <Card.Text>{objective.description}</Card.Text>
+          <Card.Text className="desc">{objective.description}</Card.Text>
           <Card.Subtitle className="text-muted" style={{ fontSize: "12px" }}>
             {objective.prediction !== ""
               ? `Acaba em: ${objective.prediction.toLocaleString([], options)}`
