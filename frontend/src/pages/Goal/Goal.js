@@ -19,7 +19,12 @@ function Goal() {
   const [objectives, setObjectives] = useState([]);
   const [edit, setEdit] = useState(false);
 
-  const options = { year: "numeric", month: "numeric", day: "numeric" };
+  const options = {
+    timeZone: "UTC",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  };
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -89,7 +94,14 @@ function Goal() {
         <div className="info">
           <h1 key={mainGoal?.id}>{mainGoal?.title}</h1>
           <p className="textDesc">{mainGoal?.description}</p>
-          <span>{mainGoal?.prediction.toLocaleString(undefined, options)}</span>
+          <span>
+            {mainGoal?.prediction
+              ? `Acaba em: ${mainGoal?.prediction.toLocaleString(
+                  undefined,
+                  options
+                )}`
+              : ""}
+          </span>
         </div>
         <div className="menu-metas">
           <div className="division-box">

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState } from "react";
 import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import Button from "../Button/index";
 import PopUp from "../PopUp";
+import { GiArrowScope } from "react-icons/gi";
 
 function ObjCard({ objective, edit }) {
   const options = {
@@ -109,6 +110,7 @@ function ObjCard({ objective, edit }) {
             margin: "0.3em",
             padding: "0",
             backgroundColor: "#5072A7",
+            zIndex: "9",
           }}
           hidden={show}
           onClick={() => {
@@ -117,34 +119,49 @@ function ObjCard({ objective, edit }) {
           }}
         />
         <Card.Body>
-          <Card.Title
-            style={{ cursor: "pointer", paddingBottom: "0.4em" }}
-            onClick={() => completeGoal(objective)}
-          >
-            {objective.title}
-          </Card.Title>
-          {objective.completed ? (
-            <BsCheckLg
+          <GiArrowScope
+            className="icon"
+            style={{ position: "absolute", top: "0", zIndex: "1" }}
+            size={"100%"}
+            color={"black"}
+            opacity={0.1}
+          />
+          <div style={{ position: "relative", zIndex: "3" }}>
+            <Card.Title
               style={{
-                position: "absolute",
-                right: "auto",
-                left: "auto",
-                marginLeft: "75%",
-                top: "40%",
+                cursor: "pointer",
+                paddingBottom: "0.4em",
               }}
-              size={"3em"}
-              opacity={0.3}
-            />
-          ) : (
-            ""
-          )}
-          <Card.Text className="desc">{objective.description}</Card.Text>
-          <Card.Subtitle className="text-muted" style={{ fontSize: "12px" }}>
-            {objective.prediction !== ""
-              ? `Acaba em: ${objective.prediction.toLocaleString([], options)}`
-              : ""}
-            {error && <Alert variant="danger">{error}</Alert>}
-          </Card.Subtitle>
+              onClick={() => completeGoal(objective)}
+            >
+              {objective.title}
+            </Card.Title>
+            {objective.completed ? (
+              <BsCheckLg
+                style={{
+                  position: "absolute",
+                  right: "auto",
+                  left: "auto",
+                  marginLeft: "80%",
+                  top: "50%",
+                }}
+                size={"3em"}
+                opacity={0.3}
+              />
+            ) : (
+              ""
+            )}
+            <Card.Text className="desc">{objective.description}</Card.Text>
+            <Card.Subtitle className="text-muted" style={{ fontSize: "12px" }}>
+              {objective.prediction !== ""
+                ? `Acaba em: ${objective.prediction.toLocaleString(
+                    [],
+                    options
+                  )}`
+                : ""}
+              {error && <Alert variant="danger">{error}</Alert>}
+            </Card.Subtitle>
+          </div>
         </Card.Body>
       </Card>
     </>

@@ -55,7 +55,7 @@ function Home() {
           <p>
             {goals.length !== 0
               ? "Continue com o ótimo trabalho!"
-              : "Bem vindo ao OrangeNotes, esse é um site para ajudar na sua organização. Ele funciona com um sistema de metas e objetivos. Defina sua meta principal e explore suas opções clicando nela para abri-lá."}
+              : "Bem vindo ao OrangeNotes, esse é um site para ajudar na sua organização. Ele funciona com um sistema de metas e objetivos. Defina sua meta principal e explore suas opções clicando no título para abri-lá."}
           </p>
         </div>
         <div className="menu-metas">

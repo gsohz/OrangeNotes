@@ -58,6 +58,5 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
   width: auto;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
-

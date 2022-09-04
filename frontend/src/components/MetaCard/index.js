@@ -6,6 +6,8 @@ import { MdDeleteForever, MdModeEdit } from "react-icons/md";
 import "./style.css";
 import { useEffect, useState } from "react";
 import PopUp from "../PopUp";
+import { GiStairsGoal } from "react-icons/gi";
+import { IoMdTrophy } from "react-icons/io";
 
 function MetaCard({ goal, edit }) {
   const options = {
@@ -92,6 +94,7 @@ function MetaCard({ goal, edit }) {
             margin: "0.3em",
             padding: "0",
             backgroundColor: "#5072A7",
+            zIndex: "9",
           }}
           hidden={show}
           onClick={() => {
@@ -101,7 +104,6 @@ function MetaCard({ goal, edit }) {
         />
 
         <Card.Body
-          onClick={() => setOpen(true)}
           style={{
             display: "flex",
             flexDirection: "column",
@@ -109,19 +111,44 @@ function MetaCard({ goal, edit }) {
             textOverflow: "ellipses",
           }}
         >
-          <Card.Title className="card-title">{goal.title}</Card.Title>
-          <Card.Subtitle className="mb-1 text-muted">
-            <ProgressBar done={Math.round(goal.percentage)} />
-          </Card.Subtitle>
-          <Card.Text className="desc">{goal.description}</Card.Text>
-          <Card.Subtitle
-            className="text-muted"
-            style={{ fontSize: "12px", marginTop: "auto" }}
-          >
-            {goal.prediction !== ""
-              ? `Acaba em: ${goal.prediction.toLocaleString([], options)}`
-              : ""}
-          </Card.Subtitle>
+          {Math.round(goal.percentage) === 100 ? (
+            <IoMdTrophy
+              style={{
+                position: "absolute",
+                top: "0",
+                zIndex: "1",
+                width: "100%",
+                height: "100%",
+              }}
+              size={"3em"}
+              opacity={0.1}
+            />
+          ) : (
+            <GiStairsGoal
+              style={{ position: "absolute", top: "0", zIndex: "1" }}
+              size={"100%"}
+              opacity={0.1}
+            />
+          )}
+
+          <div style={{ position: "relative", zIndex: "3" }}>
+            <Card.Title className="card-title" onClick={() => setOpen(true)}>
+              {goal.title}
+            </Card.Title>
+            <Card.Subtitle className="mb-1 text-muted">
+              <ProgressBar done={Math.round(goal.percentage)} />
+            </Card.Subtitle>
+
+            <Card.Text className="desc">{goal.description}</Card.Text>
+            <Card.Subtitle
+              className="text-muted"
+              style={{ fontSize: "12px", marginTop: "auto" }}
+            >
+              {goal.prediction !== ""
+                ? `Acaba em: ${goal.prediction.toLocaleString([], options)}`
+                : ""}
+            </Card.Subtitle>
+          </div>
         </Card.Body>
       </Card>
     </>
